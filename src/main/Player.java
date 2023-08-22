@@ -1,3 +1,5 @@
+package main;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -24,10 +26,24 @@ public class Player {
         isIn = true;
     }
 
+    // draw a card from a given deck and add it to the players cards.
     public void hit (Deck deck) {
         Card card = deck.dealCard();
+
+        // blackjack ace handling
+        System.out.println("Player pulls a " + card.getVal() + " of " + card.getSuit());
+        if (card.getVal() == Value.ACE) {
+            card.decideValue(aceValue());
+        }
+        //
+
         knownCards.add(card);
         playersCards.add(card);
+
+        // evaluates cards
+        isBust();
+        System.out.println("Players cards are now valued at: " + cardsValue);
+        //
     }
 
     public void stand () {
@@ -42,11 +58,12 @@ public class Player {
         return isUser;
     }
 
+    // checks if the user is busted, but also scores the user
     public void isBust () {
         int a = 0;
         for (Card card : playersCards) {
             if (card.getVal() == Value.ACE) {
-                a += aceValue();
+                a += card.getDecidedValue();
                 continue;
             }
             a += card.getVal().value;
@@ -65,6 +82,18 @@ public class Player {
         Scanner sc = new Scanner(System.in);
         int a;
         String temp;
+
+        // blackjack handling, the computer decides
+        // if ace is high or low based on its score.
+        if (!isUser) {
+            if ((cardsValue + 11) < 22) {
+                return 11;
+            }
+            return 1;
+        }
+        //
+
+        // ask the user what value they want their ace
         System.out.println("Ace high? or low?");
         while (true) {
             temp = sc.next();

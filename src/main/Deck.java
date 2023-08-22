@@ -1,7 +1,9 @@
+package main;
+
 public class Deck {
     Card[] deck = new Card[52];
 
-    // Constructor for the Deck class populates the deck with Cards.
+    // Constructor for the project.main.Deck class populates the deck with Cards.
     Deck () {
         for (int a = 0; a < Suits.values().length; a++) {
             for (int b = 0; b < Value.values().length; b++) {

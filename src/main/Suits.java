@@ -1,3 +1,5 @@
+package main;
+
 public enum Suits {
     HEARTS,
     SPADES,

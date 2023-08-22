@@ -1,3 +1,5 @@
+package main;
+
 import java.util.Scanner;
 
 public class Controller {
@@ -5,7 +7,10 @@ public class Controller {
         Deck deck = new Deck();
         deck.shuffle();
         deck.checkCardsForDuplicates();
-        //deck.showCardsInDeck();
+        gameStart(deck);
+    }
+
+    private static void gameStart (Deck deck) {
         int a = askForPlayerCount();
         Player[] players = new Player[a];
         players[0] = new Player(true, deck.dealCard(), deck.dealCard());
@@ -14,19 +19,19 @@ public class Controller {
             players[b].isBust();
         }
         int notInCount = 0;
-        int playerNum = 1;
+        int playerNum;
         while (notInCount < a) {
             notInCount = 0;
             playerNum = 1;
             System.out.println("round start");
             for (Player player : players) {
-                player.isBust();
-                System.out.println("Player " + playerNum + ")  " + player.getCardValue());
-                playerNum++;
                 if (!player.isPlayerIn()) {
                     notInCount++;
                     continue;
                 }
+                player.isBust();
+                System.out.println("Player " + playerNum + ")  " + player.getCardValue());
+                playerNum++;
                 if (player.isUserPlaying()) {
                     hitOrStand(player, deck);
                 }
@@ -43,14 +48,19 @@ public class Controller {
                 }
             }
         }
+        calculateWinner(players);
+    }
+
+    private static void calculateWinner (Player[] players) {
         int userWithHighestScore = 0;
         int highestScore = 0;
         for (int d = 0; d < players.length; d++) {
-            if (players[d].getCardValue() > 22) {
+            System.out.println("Player " + (d+1) + ")  " + players[d].getCardValue());
+            if (players[d].getCardValue() > 21) {
                 continue;
             }
             if (players[d].getCardValue() > highestScore) {
-                userWithHighestScore = d;
+                userWithHighestScore = d+1;
                 highestScore = players[d].getCardValue();
             }
         }
@@ -80,7 +90,7 @@ public class Controller {
         Scanner sc = new Scanner(System.in);
         int a;
         while (true) {
-            System.out.println("Give a number");
+            System.out.println("Give a number of players: ");
             if (sc.hasNextInt()) {
                 a = sc.nextInt();
                 if (a > 4 ) {
